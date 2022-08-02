@@ -1,6 +1,13 @@
 # Docker studies :whale2::pencil:
 
+Studies about how to best use Docker :rocket:
+
 ## Images size :anchor:
+
+To make your images smaller, check this section.
+
+### Multi-stage build :baggage_claim:
+:link: [Docker oficial documentation](https://docs.docker.com/develop/develop-images/multistage-build/)
 
 Suppose we need an image with `Python version 3.10.5` and `Poetry version 1.1.14`.
 
@@ -22,15 +29,16 @@ size-multi-stage            latest                 57bbdaaa976a   48 seconds ago
 size-single-stage           latest                 eca596905b85   2 minutes ago    994MB
 ```
 
-The image using the strategy of **Multi Stage** build is about 5 times smaller then the image that uses Single Stage build.
+The image using the strategy of **Multi-stage build** is about 5 times smaller then the image that uses Single Stage build.
 
-## Layers :paw_prints:
+### Layers :paw_prints:
+:link: [Docker oficial documentation](https://docs.docker.com/storage/storagedriver/)
 
 When we build an image, each `RUN`, `COPY` and `ADD` instruction in the Dockerfile creates a **layer**.
 
 After a **layer** concludes, it becomes read only. This means we can not modify it.
 
-We can check the **layers** of the previous image below.
+We can check the **layers** of one of the previous images below.
 ```
 $ docker history size-multi-stage
 IMAGE          CREATED              CREATED BY                                      SIZE      COMMENT
@@ -73,6 +81,31 @@ RUN apt-get update && apt-get install --yes \
   && rm -rf /var/lib/apt/lists/*
 ```
 in your Dockerfile, that removes cache before it becoming read only.
+
+## Performance :running:
+
+To make Docker faster, check this section.
+
+### Build context :earth_americas:
+
+:link: [Docker oficial documentation](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#understand-build-context)
+
+**Build context** is the required parameter for `docker build` command (and present in Docker compose as well in the `build` section, as the `context` parameter).
+
+**Build context** can increase the time to build an image. Check the output of the following commands.
+```
+$ docker build --tag big-context --file docker/size/Dockerfile.single_stage ./
+Sending build context to Docker daemon  48.64kB
+...
+```
+
+```
+$ docker build --tag small-context --file docker/size/Dockerfile.single_stage ./docker/size
+Sending build context to Docker daemon  3.584kB
+...
+```
+
+If you do not need files in the root of a project, send a different **Build context** to Docker to speed it up, or use a `.dockerignore` file.
 
 ## References :books:
 
