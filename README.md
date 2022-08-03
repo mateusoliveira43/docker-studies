@@ -100,8 +100,14 @@ Sending build context to Docker daemon  48.64kB
 ```
 
 ```
-$ docker build --tag small-context --file docker/size/Dockerfile.single_stage ./docker/size
+$ docker build --tag medium-context --file docker/size/Dockerfile.single_stage ./docker/size
 Sending build context to Docker daemon  3.584kB
+...
+```
+
+```
+$ docker build --tag small-context - < docker/size/Dockerfile.single_stage
+Sending build context to Docker daemon  2.048kB
 ...
 ```
 
